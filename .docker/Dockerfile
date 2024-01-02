@@ -1,3 +1,6 @@
+ARG UID=1000
+ARG GID=1000
+
 FROM node:16 as builder
 
 WORKDIR /app
@@ -21,6 +24,8 @@ FROM node:16-alpine
 COPY --from=builder /app /app
 
 WORKDIR /app
+
+RUN groupmod -g "${GID}" node && usermod -u "${UID}" -g "${GID}" node
 
 RUN chown -R node:node .
 
