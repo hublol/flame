@@ -25,7 +25,12 @@ COPY --from=builder /app /app
 
 WORKDIR /app
 
-RUN groupmod -g "${GID}" node && usermod -u "${UID}" -g "${GID}" node
+# Not working for Alpine:
+# RUN groupmod -g "${GID}" node && usermod -u "${UID}" -g "${GID}" node
+
+RUN deluser --remove-home node \
+  && addgroup -S node -g "${GID}" \
+  && adduser -S -G node -u "${UID}" node
 
 RUN chown -R node:node .
 
